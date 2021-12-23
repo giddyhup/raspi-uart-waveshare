@@ -1,6 +1,12 @@
 Overview
 ------
-This library is an improvement and extension of [this repository](https://github.com/not-a-bird/waveshare-epaper-uart).  It is meant to work under Python3+ for the Raspberry Pi's GPIO output.
+This library extends the functionality of the one to be found in [this repository](https://github.com/jarret/raspi-uart-waveshare) which is an improvement and extension of [this repository](https://github.com/not-a-bird/waveshare-epaper-uart).  It is meant to work under Python3+ for the Raspberry Pi's GPIO output.
+
+The main addition to its predecessors is the capability to upload image files to an SD card which needs to be poperly formatted (FAT32) and inserted in its slot on the ePaper module. The files must follow the standards defined by Waveshare. Some information about image conversion can be found [here](https://learn.adafruit.com/preparing-graphics-for-e-ink-displays). 
+
+Example files are part of this repository ([test_upload_image.py](test_upload_image.py) and [test_show_image.py](test_show_image.py)). The upload and write process is not 100 % reliable, it may be that some sleep statements need to be added for processing, YMMV.
+
+IMPORTANT: Power the modules with 5V rather then 3.3V when you intend to write files to the SD card.
 
 The API into this library is very similar to its predecessor and the provided examples there may be easily ported.
 
@@ -27,14 +33,17 @@ Wiring
 ------
 This diagram is for the Pi 3, and Pi 2. This will probably work on other Raspberry Pi iterations, but double-check that the pinout is the same to be sure. [This site](https://pinout.xyz/) has a clearer visual reference for finding the pins.
 
+
 | PI3 Pin  | E-Ink Pin |
 |---------:|:----------|
-| 3.3 v  1 | 6 3.3v    |
+| 3.3 v 1* | 6 3.3v    |
 | GND    6 | 5 GND     |
 |GPIO15 10 | 4 DOUT    |
 |GPIO14  8 | 3 DIN     |
 |GPIO04  7 | 2 WAKE_UP |
 |GPIO02  3 | 1 RESET   |
+
+*If you intend to upload files it is recommended to power the module with 5 volts (from Pi pin 2) rather than 3.3. 
 
 Configuring Pi Hardware
 -------
@@ -93,3 +102,7 @@ Examples
 
 
 [test_twisted_io.py](test_twisted_io.py) This is an example of using the e-ink display and the GPIO input and output from a Twisted event loop. The example program displayes the QR code corresponding to a push-button input.
+
+[test_upload_image.py](test_upload_image.py) Transfer an already properly formatted image via serial interface to an SD card.
+
+[test_show_image.py](test_show_image.py) Show image stored on the SD card.

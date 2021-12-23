@@ -1,5 +1,6 @@
 # Copyright (c) 2018 Not a Bird
 # Copyright (c) 2019 Jarret Dyrbye
+# Addded File Upload Capabilities giddyhup@github, 2021
 # Distributed under the MIT software license, see the accompanying
 # file LICENSE or http://www.opensource.org/licenses/mit-license.php
 
@@ -418,6 +419,35 @@ class ClearScreen(Command):
     COMMAND = b'\x2e'
     RESPONSE_BYTES = 2
 
+###############################################################################
+# Serial image transfer
+###############################################################################
+
+class UARTImageToSD(Command):
+    '''
+    From the wiki:
+    Send a file to the SD card using UART (0x40)
+
+    Example: A5 00 12 40 50 49 43 37 2E 42 4D 50 00 CC 33 C3 3C EB
+
+    Descriptions:
+
+    50 49 43 37 2E 42 4D 50 are the ASCII codes of “PIC7.BMP”. After this
+    command executed, any data from UART will be saved into the SD card and
+    saved as PIC7.BMP. If the transmission stops more than 1s, this function
+    will stop too. After the file sent, file size and Xor check will be
+    returned and you should compare them to check if the file was send
+    properly. Last, if the file was sent properly, you should send the
+    character ‘y’ to confirm. If the file is an image (.JPG or .BMP), you
+    should set the storage area to SD card (A5 00 0A 07 01 CC 33 C3 3C A9),
+    and then use the display image command to display it. UART input stream
+    command is not affected by the storage area settings.Files are only going
+    to be saved into the Micro SD card.
+    '''
+    COMMAND = b'\x40'
+    RESPONSE_BYTES = 20
+    def __init__(self, text):
+        super().__init__(self.COMMAND, text + b'\x00')
 
 ###############################################################################
 # Epaper object
@@ -540,3 +570,19 @@ class EPaper(object):
         #print("read: %d, read time: %0.2f" % (len(b),
         #                                      time.time() - start_time))
         self.bytes_expected -= len(b)
+
+    def transmitImage(self, fname):
+        self.serial.write(UARTImageToSD(fname).encode())
+        u = self.serial.read_until(b'Please send a file (less than 256KB) using UART...')
+        print(u)
+        time.sleep(.25)
+        print(f'Begin uploading {fname.decode()}')
+        f = self.serial.write(open(fname.decode(),"rb").read())
+        x = self.serial.read_until()
+        print(x)
+        #time.sleep(1)
+        y = self.serial.read_until()
+        print(y)
+        self.serial.write(b'y') 
+        time.sleep(3)
+        print(f'Done uploading {fname.decode()} ({f} bytes)')
