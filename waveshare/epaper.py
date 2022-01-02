@@ -209,6 +209,10 @@ class SetCurrentDisplayRotation(Command):
     NORMAL = b'\x00'
     FLIP = b'\x01'
     FLIPB = b'\x02' # depending on firmware, value could be this...
+    
+    # giddyhup: on my display x03 is the orientation that alignes
+    # with the '4.3inch e-Paper' label of the module
+    FLIPC = b'\x03'
     def __init__(self, rotation=NORMAL):
         super().__init__( SetCurrentDisplayRotation.COMMAND, rotation)
 
