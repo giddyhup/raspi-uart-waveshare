@@ -2,7 +2,7 @@ Overview
 ------
 This library extends the functionality of the one to be found in [this repository](https://github.com/jarret/raspi-uart-waveshare) which is an improvement and extension of [this repository](https://github.com/not-a-bird/waveshare-epaper-uart).  It is meant to work under Python3+ for the Raspberry Pi's GPIO output.
 
-The main addition to its predecessors is the capability to upload image files to an SD card which needs to be poperly formatted (FAT32) and inserted in its slot on the ePaper module. The files must follow the standards defined by Waveshare. Some information about image conversion can be found [here](https://learn.adafruit.com/preparing-graphics-for-e-ink-displays). 
+**The main addition to its predecessors is the capability to upload image files to an SD card which needs to be poperly formatted (FAT32) and inserted in its slot on the ePaper module.** The files must follow the standards defined by Waveshare. Some information about image conversion can be found [here](https://learn.adafruit.com/preparing-graphics-for-e-ink-displays). 
 
 Example files are part of this repository ([test_upload_image.py](test_upload_image.py) and [test_show_image.py](test_show_image.py)). The upload and write process is not 100 % reliable, it may be that some sleep statements need to be added for processing, YMMV.
 

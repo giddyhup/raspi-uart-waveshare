@@ -9,30 +9,20 @@ import sys
 
 from waveshare.epaper import EPaper
 from waveshare.epaper import Handshake
-from waveshare.epaper import RefreshAndUpdate
-from waveshare.epaper import SetPallet
-from waveshare.epaper import SetCurrentDisplayRotation
-from waveshare.epaper import DisplayImage
 from waveshare.epaper import SetStorageMode
-
-def showImage(fname):
-    paper.send(SetStorageMode(b'\x01'))
-    paper.send(DisplayImage(3, 3, fname.encode()))
-    
 
 if __name__ == '__main__':
     with EPaper() as paper:
         try:
             fname = sys.argv[1]
+            fullpath = sys.argv[2]
         except:
-            print(f'Please supply a file for transfer, e.g.\n'
-            f'{sys.argv[0]} TEST.JPG')
+            print(f'Please supply a file for transfer (short name and full path) e.g.\n'
+            f'{sys.argv[0]} TEST.JPG /home/pi/images/test.jpg')
             exit()
         paper.send(Handshake())
         time.sleep(2)
         paper.send(SetStorageMode(b'\x01'))
         time.sleep(2)
-        paper.transmitImage(fname.encode())
+        paper.transmitImage(fname.encode(), fullpath.encode())
         time.sleep(1)
-
-        

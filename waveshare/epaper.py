@@ -565,19 +565,24 @@ class EPaper(object):
             print("no response expected")
             return
         start_time = time.time()
-        #print("reading expected response bytes: %d" % self.bytes_expected)
+        print("reading expected response bytes: %d" % self.bytes_expected)
         b = self.read(size=self.bytes_expected, timeout=timeout)
-        #print("read: %d, read time: %0.2f" % (len(b),
-        #                                      time.time() - start_time))
+        print("read: %d, read time: %0.2f" % (len(b),
+                                              time.time() - start_time))
         self.bytes_expected -= len(b)
 
-    def transmitImage(self, fname):
+    def transmitImage(self, fname, fullpath):
+        '''
+        fname is the file name for the SD card
+        fullpath is the local complete file path and name
+        '''
+        print(f'Uploading {fullpath} as {fname}.')
         self.serial.write(UARTImageToSD(fname).encode())
         u = self.serial.read_until(b'Please send a file (less than 256KB) using UART...')
         print(u)
         time.sleep(.25)
         print(f'Begin uploading {fname.decode()}')
-        f = self.serial.write(open(fname.decode(),"rb").read())
+        f = self.serial.write(open(fullpath.decode(),"rb").read())
         x = self.serial.read_until()
         print(x)
         #time.sleep(1)

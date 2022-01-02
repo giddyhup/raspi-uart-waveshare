@@ -17,7 +17,7 @@ from waveshare.epaper import SetStorageMode
 
 def showImage(fname):
     paper.send(SetStorageMode(b'\x01'))
-    paper.send(DisplayImage(3, 3, fname.encode()))
+    paper.send(DisplayImage(0, 0, fname.encode()))
     
 
 if __name__ == '__main__':
@@ -33,7 +33,7 @@ if __name__ == '__main__':
         paper.send(SetPallet(SetPallet.BLACK, SetPallet.WHITE))
         paper.send(SetCurrentDisplayRotation(SetCurrentDisplayRotation.FLIP))
         showImage(fname)
-        time.sleep(6)
+        time.sleep(10)
         paper.send(RefreshAndUpdate())
-        time.sleep(4)
+        time.sleep(10)
         
